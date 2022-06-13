@@ -2,12 +2,14 @@
 # Script principal.
 import pandas as pd
 pd.options.mode.chained_assignment = None
+
 #pylint: disable=wrong-import-position
 from funciones import (
     join_datasets_year,
     find_max_col,
     find_rows_query,
-    calculate_bmi
+    calculate_bmi,
+    players_dict
 )
 #pylint: disable=wrong-import-position
 from graficos import (
@@ -93,3 +95,14 @@ if __name__ == '__main__':
                             LIST_M_SPAIN,
                             LIST_GROUP,
                             "Distribución del BMI en hombres de 25 a 34 años en 2020")
+
+    # EJ 4 #
+    print('\nEJ4: Diccionario bruto: ')
+    # Valores enunciado
+    IDS = [226328, 192476, 230566]
+    COLS_OF_INTEREST = ["short_name", "overall", "potential", "player_positions", "year"]
+    DATA_D = join_datasets_year("data", [2016, 2017, 2018])
+    # Se crea diccionario bruto
+    DATA_DICT = players_dict(DATA_D, IDS, COLS_OF_INTEREST)
+
+    print(DATA_DICT)

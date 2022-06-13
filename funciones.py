@@ -158,3 +158,38 @@ def calculate_bmi(dfo: pd.DataFrame, gender: str, year: int, cols_to_return: lis
     # Se añada a las columnas a solicitar el BMI.
     cols_to_return.append('BMI')
     return dfo_bmi[np.intersect1d(dfo_bmi.columns, cols_to_return)]
+
+
+def players_dict(dfo: pd.DataFrame, ids: list, cols: list) -> dict:
+    """Con un DataFrame proporcionado devuelve un DataFrame con las columnas proporcionadas
+    en una lista y el Indice de masa Corporal,  según el género y año proporcionado.
+
+    Parámetros:
+            dfo (pd.DataFrame): DataFrame a analizar.
+            ids (list): sofifa_id de los que se quiere hacer el diccionario.
+            cols (list): columnas del dataframe que se quieren incluir en diccionario.
+
+            Devuelve:
+            Un diccionario que tiene como key los id y dentro de estos otro
+            diccionario con key nombre de la columna y valores una lista con
+            los que tieneese id.
+    """
+    # Se realiza un df solo con los id's solicitados.
+    dfo_ids = dfo[dfo['sofifa_id'].isin(ids)]
+    # Se añade sofifa_id para que lo muestre como columna.
+    cols.append('sofifa_id')
+    # Se realiza df con las columnas solicitadas.
+    dfo_dict = dfo_ids[np.intersect1d(dfo_ids.columns, cols)]
+    # Se elimina sofifa_id para que no lo use en el for.
+    cols.remove('sofifa_id')
+    # Se realiza diccionario iterando por ids y dentro de ids
+    # por los valores de la columna, haciendo un listado
+    # por lo que pueden haber valores duplicados.
+    dict_p = {}
+    list_id = list(set(dfo_dict['sofifa_id']))
+    for id_p in list_id:
+        dict_p[id_p] = {}
+        for col in cols:
+            dict_p[id_p][col] = list(dfo_dict[col][dfo_dict['sofifa_id'] == id_p])
+
+    return dict_p
